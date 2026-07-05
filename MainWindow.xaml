@@ -1,0 +1,77 @@
+<Window x:Class="WpfMvvmTodoSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfMvvmTodoSample"
+        xmlns:vm="clr-namespace:WpfMvvmTodoSample.ViewModels"
+        mc:Ignorable="d"
+        Title="TODOリスト" Height="450" Width="500">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ヘッダー -->
+        <TextBlock Grid.Row="0" Text="TODOリスト"
+                   FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- 一覧 -->
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding Todos}"
+                 SelectedItem="{Binding SelectedTodo, Mode=TwoWay}"
+                 HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="2,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 完了チェック: コマンド不要の単純な双方向バインディング -->
+                        <CheckBox Grid.Column="0" VerticalAlignment="Center"
+                                  Margin="0,0,8,0"
+                                  IsChecked="{Binding IsDone, Mode=TwoWay}"/>
+
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                   Text="{Binding Title}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDone}" Value="True">
+                                            <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                            <Setter Property="Foreground" Value="Gray"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center"
+                                   Foreground="Gray" Margin="8,0,0,0"
+                                   Text="{Binding CreatedAt, StringFormat=yyyy/MM/dd}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- フッター -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="0,10,0,0">
+            <!-- 追加/編集: モーダルウィンドウを開く必要があるためコードビハインドで処理 -->
+            <Button Content="追加" Width="80" Margin="0,0,8,0" Click="AddButton_Click"/>
+            <Button Content="編集" Width="80" Margin="0,0,8,0" Click="EditButton_Click"/>
+            <!-- 削除: 選択有無で活性/非活性が変わるためRelayCommandを使用 -->
+            <Button Content="削除" Width="80" Command="{Binding DeleteCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

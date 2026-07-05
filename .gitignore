@@ -1,0 +1,43 @@
+## .NET / MSBuild
+bin/
+obj/
+*.user
+
+## Visual Studio
+.vs/
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / ReSharper
+.idea/
+*.DotSettings.user
+
+## VS Code
+.vscode/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Others
+*.tmp
+*.bak
+*.log
+*.cache
+
+## Claude Code (local-only settings)
+.claude/settings.local.json
